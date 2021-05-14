@@ -1,18 +1,15 @@
 <?php
 
-$mysqli = new mysqli("localhost:3307", "root@", "", "ex");
- 
-// Check connection
-if($mysqli === false){
-    die("ERROR: Could not connect. " . $mysqli->connect_error);
-}
+require 'conn.php';
+$userjsondata = file_get_contents('user.json');
+$data = json_decode($userjsondata, true);
  
 // Escape user inputs for security
-$sno = $mysqli->real_escape_string($_REQUEST['sno']);
-$user = $mysqli->real_escape_string($_REQUEST['user']);
-$invitedBy = $mysqli->real_escape_string($_REQUEST['invitedBy']);
-$isActive = $mysqli->real_escape_string($_REQUEST['isActive']);
-$registeredOn = $mysqli->real_escape_string($_REQUEST['registeredOn']);
+$sno = $data['sno'];
+$user = $data['user'];
+$invitedBy = $data['invitedBy'];
+$isActive = $data['isActive'];
+$registeredOn = $data['registeredOn'];
 
  
 // Attempt insert query execution
