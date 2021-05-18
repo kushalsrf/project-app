@@ -16,7 +16,7 @@ $registeredOn = $data['registeredOn'];
 $sql = "INSERT INTO users(sno,user,invitedBy,isActive,registeredOn)
  VALUES ('$sno',  '$user', '$invitedBy', '$isActive', '$registeredOn')";
 if($mysqli->query($sql) === true){
-    echo "Records inserted successfully.";
+    echo json_encode($data);
 } else{
     echo "ERROR: Could not able to execute $sql. " . $mysqli->error;
 }
