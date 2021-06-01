@@ -38,8 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'GET')
         $result = mysqli_query($link,$query) or die('Errant query:  '.$query."<br>MySQL Error: ".mysqli_error($ex));
 
 
-        $query = "INSERT INTO wallet(`user`,`amount`,`orderid`,`status`)   VALUES('$user','$amount','$orderid','$status')";
-        $result = mysqli_query($link,$query) or die('Errant query:  '.$query."<br>MySQL Error: ".mysqli_error($ex));
+     
         if ($result == 1)
         {
         $data["message"] = "data saved successfully";
