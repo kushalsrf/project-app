@@ -1,73 +1,60 @@
-<?php
-// SET HEADER
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: access");
-header("Access-Control-Allow-Methods: POST");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, orderidization, X-Requested-With");
-
-// INCLUDING DATABASE AND MAKING OBJECT
-class Database{
+<?php 
+$link = mysqli_connect('localhost:3307',"root@","","ex");
+if ($_SERVER["REQUEST_METHOD"] === 'GET')
+{
     
-    private $db_host = 'localhost:3307';
-    private $db_name = 'ex';
-    private $db_username = 'root@';
-    private $db_password = '';
-    
-    
-    public function dbConnection(){
-        
-        try{
-            $conn = new PDO('mysql:host='.$this->db_host.';dbname='.$this->db_name,$this->db_username,$this->db_password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $conn;
-        }
-        catch(PDOException $e){
-            echo "Connection error ".$e->getMessage(); 
-            exit;
-        }
-        
-        
-    }
-}
-$db_connection = new Database();
-$conn = $db_connection->dbConnection();
 
-// GET DATA FORM REQUEST
-
-$data = json_decode(file_get_contents("C:\Users\kushal saraf\Desktop\test restapi\input.json"));
-
-//CREATE MESSAGE ARRAY AND SET EMPTY
-$msg['message'] = '';
-
-// CHECK IF RECEIVED DATA FROM THE REQUEST
-if(isset($data->user) && isset($data->amount) && isset($data->orderid)){
-    // CHECK DATA VALUE IS EMPTY OR NOT
-    if(!empty($data->user) && !empty($data->amount) && !empty($data->orderid) ){
-        
-        $insert_query = "INSERT INTO `wallet`(user,amount,orderid,) VALUES(:user,:amount,:orderid)";
-        
-        $insert_stmt = $conn->prepare($insert_query);
-        // DATA BINDING
-        $insert_stmt->bindValue(':user', htmlspecialchars(strip_tags($data->user)),PDO::PARAM_STR);
-        $insert_stmt->bindValue(':amount', htmlspecialchars(strip_tags($data->amount)),PDO::PARAM_STR);
-        $insert_stmt->bindValue(':orderid', htmlspecialchars(strip_tags($data->orderid)),PDO::PARAM_STR);
-       // $insert_stmt->bindValue(':status', htmlspecialchars(strip_tags($data->status)),PDO::PARAM_STR);
-       // $insert_stmt->bindValue(':payment_time', htmlspecialchars(strip_tags($data->payment_time)),PDO::PARAM_STR);
-        
-        if($insert_stmt->execute()){
-            $msg['message'] = 'Data Inserted Successfully';
-        }else{
-            $msg['message'] = 'Data not Inserted';
-        } 
-        
+     if(isset($_GET['user'])){
+        $user = mysqli_real_escape_string($link,$_GET['user']);
     }else{
-        $msg['message'] = 'Oops! empty field detected. Please fill all the fields';
+        echo json_encode(array('status'=>'fail', 'message'=>'Please provide user'));
+        exit;
+   }
+    if(isset($_GET['amount'])){
+        $amount = mysqli_real_escape_string($link,$_GET['amount']);
+     }else{
+        echo json_encode(array('status'=>'fail', 'message'=>'Please provide amount'));
+        exit;
+     }
+     if(isset($_GET['orderid'])){
+        $orderid = mysqli_real_escape_string($link,$_GET['orderid']);
+        }else{
+            echo json_encode(array('status'=>'fail', 'message'=>'Please provide orderid'));
+            exit;
+     }
+     
+     if(isset($_GET['status'])){
+        
+        $status = mysqli_real_escape_string($link,$_GET['status']);
+        }else{
+            echo json_encode(array('status'=>'fail', 'message'=>'Please provide status'));
+            exit;
+     }
+   
+    if($status==1||$status==2){
+    
+        $query = "INSERT INTO wallet(`user`,`amount`,`orderid`,`status`)   VALUES('$user','$amount','$orderid','$status')";
+        $result = mysqli_query($link,$query) or die('Errant query:  '.$query."<br>MySQL Error: ".mysqli_error($ex));
+        if ($result == 1)
+        {
+        $data["message"] = "data saved successfully";
+        $data["status"] = "Ok";
+        }
+        else
+        {
+        $data["message"] = "data not saved successfully";
+        $data["status"] = "error";    
+        }
     }
+    else {
+        echo json_encode(array(' status can either be 1 or 2'));
+         }
 }
-else{
-    $msg['message'] = 'Please fill all the fields | user, amount, orderid';
+else
+{
+    $data["message"] = "Format not supported";
+    $data["status"] = "error";    
 }
-//ECHO DATA IN JSON FORMAT
-echo  json_encode($msg);
+    header('Content-type: application/json');
+    echo json_encode($data);
 ?>
