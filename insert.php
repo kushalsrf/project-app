@@ -1,5 +1,5 @@
 <?php 
-$link = mysqli_connect('localhost:3307',"root@","","ex");
+require 'db.php';
 if ($_SERVER["REQUEST_METHOD"] === 'GET')
 {
     
