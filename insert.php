@@ -32,7 +32,12 @@ if ($_SERVER["REQUEST_METHOD"] === 'GET')
      }
    
     if($status==1||$status==2){
-    
+        
+        $query = "INSERT INTO `".$ex."`.wallet(`user`,`amount`,`orderid`,`status`)   
+        VALUES('".$user."','".$amount."','".$orderid."','".$status."')";
+        $result = mysqli_query($link,$query) or die('Errant query:  '.$query."<br>MySQL Error: ".mysqli_error($ex));
+
+
         $query = "INSERT INTO wallet(`user`,`amount`,`orderid`,`status`)   VALUES('$user','$amount','$orderid','$status')";
         $result = mysqli_query($link,$query) or die('Errant query:  '.$query."<br>MySQL Error: ".mysqli_error($ex));
         if ($result == 1)
