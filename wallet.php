@@ -1,19 +1,5 @@
 <?php 
-$user = 'root@';
-$password = '';
-$db = 'ex';
-$host = 'localhost';
-$port = 8000;
-
-$link = mysqli_init();
-$success = mysqli_real_connect(
-   $link,
-   $host,
-   $user,
-   $password,
-   $db,
-   $port
-);
+require'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] === 'GET')
 {
