@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'GET')
      }
      if(isset($_GET['time_to_start'])){
       $time_to_start = mysqli_real_escape_string($link,$_GET['time_to_start']);
-      # date("Y-m-d", strtotime("$time_to_start"));
+      
    }else{
       echo json_encode(array('status'=>'fail', 'message'=>'Please provide time_to_start'));
       exit;
